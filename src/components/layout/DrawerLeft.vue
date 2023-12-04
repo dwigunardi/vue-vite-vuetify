@@ -5,7 +5,7 @@ const drawer = ref(true);
 const rail = ref(false);
 </script>
 <template>
-  <v-navigation-drawer v-model="drawer" :rail="rail" permanent @click="rail = false" color="primary"  >
+  <v-navigation-drawer v-model="drawer" :rail="rail" permanent @click="rail = false" color="primary"  style="height: 100vh;position: fixed;">
     <v-list-item nav @click.stop="rail = !rail">
   <img src="../../assets/AnimeBoX.png" alt="User Avatar" class="v-list-item__avatar">
   <!-- <v-list-item-content>

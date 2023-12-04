@@ -6,6 +6,10 @@ const routes = [
   // { path: '/hello', component: () => import('./components/HelloWorld.vue') },
   { path: "/about", component: () => import("./components/About.vue") },
   {
+    path: "/anime/:id",
+    component: () => import("./components/detail/DetailAnime.vue"),
+  },
+  {
     path: "/:pathMatch(.*)*",
     component: () => import("./components/NotFound.vue"),
   },

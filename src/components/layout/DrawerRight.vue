@@ -5,7 +5,7 @@ const drawer = ref(true);
 const rail = ref(false);
 </script>
 <template>
-  <v-navigation-drawer v-model="drawer" :rail="rail" permanent @click="rail = false" location="right" color="primary">
+  <v-navigation-drawer v-model="drawer" :rail="rail" permanent @click="rail = false" location="right" color="primary" style="height: 100vh;position: fixed;">
     <v-list nav @click.stop="rail = !rail" class="cursor-pointer">
 
       <v-list-item v-if="!rail" prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg" title="Sandra Adams"
