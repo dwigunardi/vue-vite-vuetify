@@ -3,27 +3,16 @@ import Navbar from "./layout/Navbar.vue";
 import MainLayout from "./layout/MainLayout.vue";
 import useTopAnime from "../repository/getTopAnime";
 import useSeasonNow from "../repository/getSeasonsNow";
-import useRecentRecomendation from "../repository/getRecentRecomendation";
+import useUpcomingAnime from "../repository/getUpcomingAnime";
 import { watch, ref } from "vue";
 import { useRouter } from "vue-router";
-
-const { data, isFinished, isLoading } = useSeasonNow({ page: 2, limit: 12 });
-// const { data: dataRecomend, isFinished: isFinishedRecomend, isLoading: isLoadingRecomend } = useRecentRecomendation()
-const animeData = data;
+import HomeCardTayang from "./section/HomeCardTayang.vue";
+const page = ref(1)
+const pageUp = ref(1)
 const snackbar = ref(false);
-watch(data, (newValue, oldValue) => {
-    // console.log(newValue?.data?.map((item) => item.genres));
-});
 const showOverlay = ref(false);
 const router = useRouter();
-const colors = [
-    "indigo",
-    "warning",
-    "pink darken-2",
-    "red lighten-1",
-    "deep-purple accent-4",
-];
-const slides = ["First", "Second", "Third", "Fourth", "Fifth"];
+
 const items = [
     {
         src: "/banner-1.png",
@@ -43,12 +32,39 @@ function truncate(str, n) {
         ? str.slice(0, n - 1) + "...;"
         : str;
 }
+const handlePageChange = async (newValue) => {
+    page.value = await newValue
+    await execute({ params: { page: newValue, limit: 12 } });
+    animeData = await data;
+}
+
+const handlePageChangeUp = async (newValue) => {
+    pageUp.value = await newValue
+    await executeUp({ params: { page: newValue, limit: 12, filter: "tv" } });
+    animeUp = await upcoming
+}
+
+const { data, isFinished, isLoading, execute, error } = useSeasonNow();
+const { data: upcoming, isFinished: upcomingFinished, isLoading: upcomingLoading, execute: executeUp, error: errorUp } = useUpcomingAnime();
+const { data: dataRecomend, isFinished: isFinishedRecomend, isLoading: isLoadingRecomend } = useTopAnime()
+let animeData = data;
+let animeRecom = dataRecomend
+let animeUp = upcoming
+// watch([page, data], (newValue, oldValue) => {
+//     if (newValue !== oldValue) {
+//         const newURL = import.meta.env.VITE_APP_BASE_URL + `/seasons/now?page=${newValue}&limit=${12}`;
+//         execute({ url: '/seasons/now', params: { page: newValue, limit: 12 } });
+//         animeData = data;
+//     }
+// });
+
 </script>
 <template>
     <div>
         <MainLayout>
-            <v-carousel v-if="!isLoading" cycle height="600" hide-delimiter-background show-arrows="hover" progress="info">
-                <v-carousel-item v-for="(slide, i) in animeData?.data?.slice(1, 10)" :key="i">
+            <v-carousel v-if="!isLoadingRecomend" cycle height="600" hide-delimiter-background show-arrows="hover"
+                progress="info">
+                <v-carousel-item v-for="(slide, i) in animeRecom?.data" :key="i">
                     <v-img :src="slide.trailer.images.maximum_image_url" cover>
                         <template v-slot:placeholder>
                             <div class="d-flex align-center justify-center fill-height">
@@ -71,7 +87,7 @@ function truncate(str, n) {
                             </div>
                             <div class="mt-10">
                                 <v-btn variant="flat" color="info" append-icon="mdi-arrow-right-box"
-                                @click="router.push(`/anime/${slide.mal_id}`)">Lihat Lebih Lanjut</v-btn>
+                                    @click="router.push(`/anime/${slide.mal_id}`)">Lihat Lebih Lanjut</v-btn>
                             </div>
                         </div>
                     </v-img>
@@ -82,36 +98,17 @@ function truncate(str, n) {
                     <v-img :src="items[i]?.src" cover></v-img>
                 </div>
             </v-carousel>
-            <v-row v-if="!isLoading" align-content="space-between" class="mt-5">
-                <v-col cols="3" v-for="items in animeData?.data" :key="items.mal_id">
-                    <v-hover> <template v-slot:default="{ isHovering, props }">
-                            <v-img height="318" width="100%" cover :src="items.images.jpg.large_image_url"
-                                @click="router.push(`/anime/${items.mal_id}`)" v-bind="props" style="cursor: pointer;" class="text-white">
-                                <v-overlay :model-value="isHovering" contained scrim="secondary"
-                                    class="align-center justify-center">
-                                    <v-btn variant="flat">See more info</v-btn>
-                                </v-overlay>
-                            </v-img>
-                        </template></v-hover>
 
-
-                    <div class="d-flex align-center justify-start">
-                        <v-btn variant="tonal" color="info" size="small" class="mt-2 me-2" rounded="xl">{{ items?.type
-                        }}</v-btn>
-                        <v-btn variant="tonal" color="info" size="small" class="mt-2 me-2" rounded="xl">{{ items?.source
-                        }}</v-btn>
-                        <v-btn variant="tonal" color="info" size="small" class="mt-2 me-2" prepend-icon="mdi-star"
-                            rounded="xl">{{ items?.score }}</v-btn>
-                    </div>
-                    <h3>{{ items.title }}</h3>
-                </v-col>
-            </v-row>
-
-            <v-row v-else>
-                <v-col v-for="i in 10" :key="i" cols="4">
-                    <v-skeleton-loader :elevation="10" color="accent" type="card"></v-skeleton-loader>
-                </v-col>
-            </v-row>
+            <HomeCardTayang :data="animeData?.data" :isLoading="isLoading" :title="'Sedang Tayang'" />
+            <div class="text-center my-5">
+                <v-pagination v-model="page" :length="animeData?.pagination?.last_visible_page" rounded="circle"
+                    total-visible="7" @update:model-value="handlePageChange"></v-pagination>
+            </div>
+            <HomeCardTayang :data="animeUp?.data" :isLoading="upcomingLoading" :title="'Akan Datang'" />
+            <div class="text-center my-5">
+                <v-pagination v-model="pageUp" :length="animeUp?.pagination?.last_visible_page" rounded="circle"
+                    total-visible="7" @update:model-value="handlePageChangeUp"></v-pagination>
+            </div>
         </MainLayout>
     </div>
 </template>
