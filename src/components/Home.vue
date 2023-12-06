@@ -7,6 +7,7 @@ import useUpcomingAnime from "../repository/getUpcomingAnime";
 import { watch, ref } from "vue";
 import { useRouter } from "vue-router";
 import HomeCardTayang from "./section/HomeCardTayang.vue";
+import { useSearchValue } from '../store/searchValue';
 const page = ref(1)
 const pageUp = ref(1)
 const snackbar = ref(false);
@@ -34,7 +35,7 @@ function truncate(str, n) {
 }
 const handlePageChange = async (newValue) => {
     page.value = await newValue
-    await execute({ params: { page: newValue, limit: 12 } });
+    await execute({ params: { page: newValue, limit: 12, filter: 'tv' } });
     animeData = await data;
 }
 
@@ -50,14 +51,11 @@ const { data: dataRecomend, isFinished: isFinishedRecomend, isLoading: isLoading
 let animeData = data;
 let animeRecom = dataRecomend
 let animeUp = upcoming
-// watch([page, data], (newValue, oldValue) => {
-//     if (newValue !== oldValue) {
-//         const newURL = import.meta.env.VITE_APP_BASE_URL + `/seasons/now?page=${newValue}&limit=${12}`;
-//         execute({ url: '/seasons/now', params: { page: newValue, limit: 12 } });
-//         animeData = data;
-//     }
-// });
 
+const { isSearch, searchValue, } = useSearchValue();
+// watch(searchValue, (newValue, oldValue) => {
+//     console.log(newValue, 'eewe')
+// })
 </script>
 <template>
     <div>
@@ -98,7 +96,12 @@ let animeUp = upcoming
                     <v-img :src="items[i]?.src" cover></v-img>
                 </div>
             </v-carousel>
-
+            <div v-if="isSearch">
+                <h1 class="text-red">Search udah jalan cuy</h1>
+            </div>
+            <div v-else="!isSearch">
+                <h1 class="text-red">Cari Anime Disini</h1>
+            </div>
             <HomeCardTayang :data="animeData?.data" :isLoading="isLoading" :title="'Sedang Tayang'" />
             <div class="text-center my-5">
                 <v-pagination v-model="page" :length="animeData?.pagination?.last_visible_page" rounded="circle"
