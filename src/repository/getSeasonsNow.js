@@ -10,7 +10,8 @@ export default function useSeasonNow() {
   const { data, error, isFinished, isLoading, execute } = useAxios(
     `/seasons/now`,
     { params: { page: 1, limit: 12, filter: "tv" } },
-    instance
+    instance,
+    { immediate: false }
   );
 
   return {

@@ -8,11 +8,15 @@ export const useSearchValue = createGlobalState(() => {
 
   // getters
   const searchValue = ref("");
-
+  const searchData = ref([
+    {
+      title: "test",
+    },
+  ]);
   // actions
   function setSearchValue(params) {
     searchValue.value = params;
   }
 
-  return { isSearch, searchValue, setSearchValue };
+  return { isSearch, searchValue, setSearchValue, searchData };
 });

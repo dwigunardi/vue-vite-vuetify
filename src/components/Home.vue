@@ -4,7 +4,8 @@ import MainLayout from "./layout/MainLayout.vue";
 import useTopAnime from "../repository/getTopAnime";
 import useSeasonNow from "../repository/getSeasonsNow";
 import useUpcomingAnime from "../repository/getUpcomingAnime";
-import { watch, ref } from "vue";
+import useSearchAnime from '../repository/getSearchAnime';
+import { watch, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import HomeCardTayang from "./section/HomeCardTayang.vue";
 import { useSearchValue } from '../store/searchValue';
@@ -48,14 +49,17 @@ const handlePageChangeUp = async (newValue) => {
 const { data, isFinished, isLoading, execute, error } = useSeasonNow();
 const { data: upcoming, isFinished: upcomingFinished, isLoading: upcomingLoading, execute: executeUp, error: errorUp } = useUpcomingAnime();
 const { data: dataRecomend, isFinished: isFinishedRecomend, isLoading: isLoadingRecomend } = useTopAnime()
+const { isSearch, searchValue, searchData } = useSearchValue();
+const { data: dataSearch, isFinished: isFinishedSearch, isLoading: isLoadingSearch, execute: executeSearch, error: errorSearch } = useSearchAnime(searchValue);
 let animeData = data;
 let animeRecom = dataRecomend
 let animeUp = upcoming
+let animeSearch = dataSearch
 
-const { isSearch, searchValue, } = useSearchValue();
-// watch(searchValue, (newValue, oldValue) => {
-//     console.log(newValue, 'eewe')
-// })
+onMounted(() => {
+    execute({ params: { page: 1, limit: 12, filter: 'tv' } })
+})
+
 </script>
 <template>
     <div>
@@ -97,15 +101,27 @@ const { isSearch, searchValue, } = useSearchValue();
                 </div>
             </v-carousel>
             <div v-if="isSearch">
-                <h1 class="text-red">Search udah jalan cuy</h1>
+                <div v-if="errorSearch">
+                    <h1>Error</h1>
+                </div>
+                <div v-else>
+                    <HomeCardTayang :data="searchData?.data" :isLoading="isLoading"
+                        :title="'Hasil Penelusuran Sedang Tayang'" />
+                </div>
             </div>
             <div v-else="!isSearch">
-                <h1 class="text-red">Cari Anime Disini</h1>
+                <HomeCardTayang :data="animeData?.data" :isLoading="isLoading" :title="'Sedang Tayang'" />
             </div>
-            <HomeCardTayang :data="animeData?.data" :isLoading="isLoading" :title="'Sedang Tayang'" />
+
             <div class="text-center my-5">
-                <v-pagination v-model="page" :length="animeData?.pagination?.last_visible_page" rounded="circle"
-                    total-visible="7" @update:model-value="handlePageChange"></v-pagination>
+                <div v-if="isSearch">
+                    <v-pagination v-model="page" :length="animeSearch?.pagination?.last_visible_page" rounded="circle"
+                        total-visible="7" @update:model-value="handlePageChange"></v-pagination>
+                </div>
+                <div v-else>
+                    <v-pagination v-model="page" :length="animeData?.pagination?.last_visible_page" rounded="circle"
+                        total-visible="7" @update:model-value="handlePageChange"></v-pagination>
+                </div>
             </div>
             <HomeCardTayang :data="animeUp?.data" :isLoading="upcomingLoading" :title="'Akan Datang'" />
             <div class="text-center my-5">
