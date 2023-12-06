@@ -50,8 +50,8 @@ const props = defineProps({
     </v-row>
 
     <v-row v-else>
-        <v-col v-for="i in 10" :key="i" cols="4">
-            <v-skeleton-loader :elevation="10" color="accent" type="card"></v-skeleton-loader>
+        <v-col v-for="i in 12" :key="i" cols="4">
+            <v-skeleton-loader :elevation="10" color="accent" type="card" height="318"></v-skeleton-loader>
         </v-col>
     </v-row>
 </template>
