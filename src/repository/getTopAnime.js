@@ -10,7 +10,8 @@ export default function useTopAnime() {
   const { data, error, isFinished, isLoading, execute } = useAxios(
     `/top/anime`,
     { params: { page: 1, limit: 8, filter: "airing", type: "tv" } },
-    instance
+    instance,
+    { immediate: false }
   );
 
   return {

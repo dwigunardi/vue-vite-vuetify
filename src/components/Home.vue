@@ -49,7 +49,7 @@ const handlePageChangeUp = async (newValue) => {
 
 const { data, isFinished, isLoading, execute, error } = useSeasonNow();
 const { data: upcoming, isFinished: upcomingFinished, isLoading: upcomingLoading, execute: executeUp, error: errorUp } = useUpcomingAnime();
-const { data: dataRecomend, isFinished: isFinishedRecomend, isLoading: isLoadingRecomend, error: errorRecomend } = useTopAnime()
+const { data: dataRecomend, isFinished: isFinishedRecomend, isLoading: isLoadingRecomend, error: errorRecomend, execute: executeRecom } = useTopAnime()
 const { isSearch, searchValue, searchData } = useSearchValue();
 const { data: dataSearch, isFinished: isFinishedSearch, isLoading: isLoadingSearch, execute: executeSearch, error: errorSearch } = useSearchAnime(searchValue);
 let animeData = data;
@@ -59,6 +59,7 @@ let animeSearch = dataSearch
 
 onMounted(() => {
     execute({ params: { page: 1, limit: 12, filter: 'tv' } })
+    executeRecom({ params: { page: 1, limit: 8, filter: "airing", type: "tv" } })
 })
 
 watch(error, (newValue, oldValue) => {
@@ -69,7 +70,7 @@ watch(error, (newValue, oldValue) => {
     }
 })
 
-watch(errorRecomend, (newValue, oldValue) => {
+watch(error, (newValue, oldValue) => {
     if (newValue !== oldValue) {
         dialog.value = true
     } else {

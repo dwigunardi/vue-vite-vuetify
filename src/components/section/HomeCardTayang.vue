@@ -9,7 +9,8 @@ const props = defineProps({
     subtitle: String,
     description: String,
     data: Object || Array,
-    isLoading: Boolean
+    isLoading: Boolean,
+    showIsLihatSemua: Boolean,
 });
 
 </script>
@@ -20,7 +21,8 @@ const props = defineProps({
         <div
             class="text-h4 my-3 text-white text-capitalize font-weight-bold w-100 d-flex align-center justify-space-between">
             <p>{{ props.title }}</p>
-            <v-btn variant="tonal" color="info" size="small" class="mt-2 me-2" rounded="xl">Lihat Semua</v-btn>
+            <v-btn v-if="props.showIsLihatSemua" variant="tonal" color="info" size="small" class="mt-2 me-2"
+                rounded="xl">Lihat Semua</v-btn>
         </div>
     </div>
     <v-row v-if="!props.isLoading" align-content="space-between" class="mt-5">

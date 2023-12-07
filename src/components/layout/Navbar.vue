@@ -3,9 +3,13 @@
         <v-container>
             <v-row align="center" justify="start">
                 <v-col cols="4" class="grow">
-                    <v-text-field v-model="search" label="Search...." density="compact" variant="outlined" clearable
-                        append-inner-icon="mdi-magnify" @update:model-value="searchFunction" bg-color="#1E202C" single-line
-                        hide-details hint="Enter to search" persistent-clear></v-text-field>
+                    <v-text-field v-if="router.currentRoute.value.path === '/'" v-model="search" label="Search...."
+                        density="compact" variant="outlined" clearable append-inner-icon="mdi-magnify"
+                        @update:model-value="searchFunction" bg-color="#1E202C" single-line hide-details
+                        hint="Enter to search" persistent-clear></v-text-field>
+                    <h1 v-else>
+                        {{ router.currentRoute.value.path.split('/')[1].toUpperCase() }}
+                    </h1>
                 </v-col>
                 <v-col cols="2" offset="1">
                     <v-btn icon>
@@ -38,11 +42,12 @@
 <script setup>
 import { ref, onMounted, defineEmits, watch } from 'vue';
 import { useTheme } from "vuetify";
-import Footer from './Footer.vue';
 import useSearchAnime from '../../repository/getSearchAnime';
 import useSeasonNow from '../../repository/getSeasonsNow';
 import { useSearchValue } from '../../store/searchValue';
 import { useDebounceFn } from '@vueuse/core'
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const { searchValue, setSearchValue, isSearch, searchData } = useSearchValue();
 const { data, isFinished, isLoading, execute, error } = useSearchAnime(searchValue);
 const { data: now, isFinished: nowFinished, isLoading: nowLoading, execute: nowExecute, error: nowError } = useSeasonNow();

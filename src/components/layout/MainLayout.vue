@@ -5,7 +5,10 @@ import DrawerRight from './DrawerRight.vue';
 import DrawerLeft from './DrawerLeft.vue';
 import { ref, watch } from 'vue';
 import { useSearchValue } from '../../store/searchValue';
+import { useRouter } from 'vue-router';
 const { isSearch, searchValue, } = useSearchValue();
+const router = useRouter();
+const isDetail = ref(false);
 const updateIsSearch = (newValue) => {
     isSearch.value = newValue;
     console.log(newValue, 'ew')
@@ -19,7 +22,7 @@ const updateIsSearch = (newValue) => {
             <DrawerRight />
             <Navbar :isSearch="isSearch" @update:isSearch="updateIsSearch" />
             <v-main class="bg-accent">
-                <v-container>
+                <v-container :fluid="router.currentRoute.value.path.includes('/anime/') ? true : false">
                     <slot></slot>
                 </v-container>
             </v-main>
