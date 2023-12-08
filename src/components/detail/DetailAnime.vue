@@ -14,13 +14,13 @@ console.log('Anime ID:', dataDetail);
 </script>
 <template>
   <MainLayout>
-    <v-parallax :src="dataDetail?.data.trailer.images.maximum_image_url" height="600" scale="0.5">
+    <v-parallax :src="dataDetail?.data.trailer.images.maximum_image_url" height="640" scale="0.5">
       <div class="bg-primary h-100 w-fill" style="opacity: 0.5; position: relative"></div>
       <div class="h-fill w-fill" style="position: absolute; top: 40%; left: 2%">
-        <v-row class="w-100" align-content="start" align="start">
+        <v-row class="w-100" align-content="start" align="center">
           <v-col cols="3">
             <div class="border border-light py-1">
-              <v-img :src="dataDetail?.data.images.webp.large_image_url" height="350" width="350" class="rounded"></v-img>
+              <v-img :src="dataDetail?.data.images.webp.large_image_url" height="300" width="300" class="rounded"></v-img>
             </div>
           </v-col>
           <v-col cols="9">
@@ -85,11 +85,10 @@ console.log('Anime ID:', dataDetail);
         <v-hover> <template v-slot:default="{ isHovering, props }">
             <v-alert border="start" :border-color="isHovering ? 'error' : 'info'" v-bind="props"
               v-bind:elevation="isHovering ? 10 : 0" title="Producers" color="accent" style="transition: all 0.9s;">
-              <div v-for="items in dataDetail?.data?.producers" :key="items.mal_id" class="d-flex align-center mt-2"
-                style="gap: 10px;">
-                <p>Type :{{ items.type }}</p>
+              <div v-for="items in dataDetail?.data?.producers" :key="items.mal_id"
+                class="d-flex flex-column align-start mt-2" style="gap: 10px;">
                 <p>{{ items.name }}</p>
-                <p>Url : {{ items.url }}</p>
+                <p>{{ items.url }}</p>
               </div>
             </v-alert>
           </template></v-hover>
@@ -99,6 +98,20 @@ console.log('Anime ID:', dataDetail);
           <iframe :src="dataDetail?.data?.trailer.embed_url" frameborder="0" height="500"
             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
             class="w-100"></iframe>
+        </div>
+        <div>
+          <h1><span class="text-red">| </span>External</h1>
+          <v-divider></v-divider>
+          <v-hover> <template v-slot:default="{ isHovering, props }">
+              <v-alert border="start" :border-color="isHovering ? 'error' : 'info'" v-bind="props"
+                v-bind:elevation="isHovering ? 10 : 0" title="External Info" color="accent" style="transition: all 0.9s;">
+                <div v-for="items in dataDetail?.data?.external" :key="items.mal_id"
+                  class="d-flex flex-column align-start mt-2" style="gap: 10px;">
+                  <p>{{ items.name }}</p>
+                  <p>{{ items.url }}</p>
+                </div>
+              </v-alert>
+            </template></v-hover>
         </div>
       </div>
     </v-container>
