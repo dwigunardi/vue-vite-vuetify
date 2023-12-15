@@ -31,3 +31,16 @@ const updateIsSearch = (newValue) => {
 
     </v-layout>
 </template>
+
+<style>
+*::-webkit-scrollbar {
+  background-color: transparent; /* Change to your desired color */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #2196F3;
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+</style>

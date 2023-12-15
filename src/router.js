@@ -13,6 +13,8 @@ const routes = [
   },
   { path: "/home", component: () => import("./components/Home.vue") },
   { path: "/trending", component: () => import("./components/Trending.vue") },
+  { path: "/suggestions", component: () => import("./components/Suggestion.vue") },
+  { path: "/category", component: () => import("./components/Category.vue") },
 ];
 
 // 3. Create the router instance and pass the `routes` option

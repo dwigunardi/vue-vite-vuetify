@@ -13,7 +13,7 @@ export const vuetify = createVuetify({
         colors: {
           primary: "#1E202C",
           secondary: "#424242",
-          accent: "#03001C",
+          accent: "#fff",
           error: "#FF5252",
           info: "#2196F3",
           success: "#4CAF50",
@@ -36,6 +36,7 @@ export const vuetify = createVuetify({
       },
     },
   },
+  ssr: true,
   icons: {
     defaultSet: "mdi",
     aliases,

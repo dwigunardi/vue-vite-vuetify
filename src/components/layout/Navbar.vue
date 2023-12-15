@@ -32,7 +32,7 @@
                         <v-btn icon @click="toggleTheme">
                             <v-icon>mdi-theme-light-dark</v-icon>
                         </v-btn>
-                        {{ isDarkTheme ? 'Dark' : 'Light' }}
+                        {{ themeState ? 'Dark' : 'Light' }}
                     </div>
                 </v-col>
             </v-row>
@@ -45,7 +45,7 @@ import { useTheme } from "vuetify";
 import useSearchAnime from '../../repository/getSearchAnime';
 import useSeasonNow from '../../repository/getSeasonsNow';
 import { useSearchValue } from '../../store/searchValue';
-import { useDebounceFn } from '@vueuse/core'
+import { useDebounceFn, useStorage } from '@vueuse/core'
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const { searchValue, setSearchValue, isSearch, searchData } = useSearchValue();
@@ -85,4 +85,5 @@ watch(search, (newValue, oldValue) => {
 watch(data, (newValue, oldValue) => {
     searchData.value = newValue
 })
+const themeState = useStorage('theme', isDarkTheme) // returns Ref<boolean>
 </script>

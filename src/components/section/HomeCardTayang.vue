@@ -19,7 +19,7 @@ const props = defineProps({
     <div class="d-flex justify-start align-center w-100">
         <div class=" text-h3 my-3 mr-3 text-red">|</div>
         <div
-            class="text-h4 my-3 text-white text-capitalize font-weight-bold w-100 d-flex align-center justify-space-between">
+            class="text-h4 my-3 text-capitalize font-weight-bold w-100 d-flex align-center justify-space-between" style="color: var(--v-primary-base);">
             <p>{{ props.title }}</p>
             <v-btn v-if="props.showIsLihatSemua" variant="tonal" color="info" size="small" class="mt-2 me-2"
                 rounded="xl">Lihat Semua</v-btn>
