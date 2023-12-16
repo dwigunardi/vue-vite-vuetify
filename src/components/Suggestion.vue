@@ -32,13 +32,12 @@ const handlePageChange = async (newValue) => {
             </div>
         </v-parallax>
         <v-expansion-panels variant="inset" class="mt-5" v-if="!isLoading">
-            <v-expansion-panel v-for="item in animeSuggestion?.data" :key="item.mal_id"
-                bg-color="primary">
+            <v-expansion-panel v-for="item in animeSuggestion?.data" :key="item.mal_id" bg-color="primary">
                 <v-expansion-panel-title>
                     <template v-slot:default="{ expanded }">
                         <v-row no-gutters>
                             <v-col cols="4" class="d-flex justify-start">
-                               From : {{ item.user.username }}
+                                From : {{ item.user.username }}
                             </v-col>
                             <v-col cols="8" class="text-grey">
                                 <v-fade-transition leave-absolute>
@@ -46,7 +45,7 @@ const handlePageChange = async (newValue) => {
                                         {{ item.date.split('T')[0] }}
                                     </span>
                                     <span v-else key="1">
-                                       {{ null }}
+                                        {{ null }}
                                     </span>
                                 </v-fade-transition>
                             </v-col>
@@ -59,14 +58,24 @@ const handlePageChange = async (newValue) => {
                         <v-col cols="3" v-for="anime in item.entry" :key="item.mal_id">
                             <a :href="anime.url" target="_blank"
                                 class="text-decoration-none text-white text-h6 font-weight-bold hover">{{ anime.title }}</a>
-                           
-                                <v-img :src="anime.images.jpg.image_url" class="rounded" max-width="300" max-height="400"  @click="router.push(`/anime/${anime.mal_id}`)">
-                                    <template v-slot:error>
-                                        <v-img class="mx-auto" height="300" max-width="500"
-                                            src="https://picsum.photos/500/300?image=232"></v-img>
-                                    </template>
-                                </v-img>
-                            
+                            <v-hover>
+                                <template v-slot:default="{ isHovering, props }">
+                                    <v-img height="80%" width="100%" :src="anime.images.jpg.image_url"
+                                        @click="router.push(`/anime/${anime.mal_id}`)" v-bind="props"
+                                        style="cursor: pointer;" class="text-white">
+                                        <v-overlay :model-value="isHovering" contained scrim="secondary"
+                                            class="align-center justify-center">
+                                            <v-btn variant="flat">See more info</v-btn>
+                                        </v-overlay>
+                                        <template v-slot:error>
+                                            <v-img class="mx-auto" height="300" max-width="500"
+                                                src="https://picsum.photos/500/300?image=232"></v-img>
+                                        </template>
+                                    </v-img>
+                                </template>
+                            </v-hover>
+
+
                         </v-col>
                     </v-row>
                     <div class="mt-5">

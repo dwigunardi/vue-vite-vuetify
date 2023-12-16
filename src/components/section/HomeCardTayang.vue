@@ -25,10 +25,11 @@ const props = defineProps({
                 rounded="xl">Lihat Semua</v-btn>
         </div>
     </div>
-    <v-row v-if="!props.isLoading" align-content="space-between" class="mt-5">
+    <v-row v-if="!props.isLoading" justify="start" align-content="space-between" class="mt-5">
         <v-col cols="3" v-for="items in props.data" :key="items.mal_id">
-            <v-hover> <template v-slot:default="{ isHovering, props }">
-                    <v-img height="318" width="100%" cover :src="items.images.jpg.large_image_url"
+            <v-hover> 
+                <template v-slot:default="{ isHovering, props }">
+                    <v-img height="80%" width="100%"  :src="items.images.jpg.large_image_url"
                         @click="router.push(`/anime/${items.mal_id}`)" v-bind="props" style="cursor: pointer;"
                         class="text-white">
                         <v-overlay :model-value="isHovering" contained scrim="secondary"
@@ -36,9 +37,8 @@ const props = defineProps({
                             <v-btn variant="flat">See more info</v-btn>
                         </v-overlay>
                     </v-img>
-                </template></v-hover>
-
-
+                </template>
+            </v-hover>
             <div class="d-flex align-center justify-start">
                 <v-btn variant="tonal" color="info" size="small" class="mt-2 me-2" rounded="xl">{{ items?.type
                 }}</v-btn>
@@ -47,7 +47,7 @@ const props = defineProps({
                 <v-btn variant="tonal" color="info" size="small" class="mt-2 me-2" prepend-icon="mdi-star" rounded="xl">{{
                     items?.score }}</v-btn>
             </div>
-            <h3>{{ items.title }}</h3>
+            <h3 class="py-2">{{ items.title }}</h3>
         </v-col>
     </v-row>
 
